@@ -3,127 +3,330 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة الأجهزة المتوافقة مع النظام الشمسي</title>
+    <title>حاسبة التوافق الشمسي - النظام والأجهزة</title>
     <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Tajawal', Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
         }
+        
         .container {
-            max-width: 800px;
+            max-width: 100%;
             margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-        }
-        .section {
-            margin-bottom: 20px;
             padding: 15px;
-            background: #f9f9f9;
-            border-radius: 5px;
         }
-        .section-title {
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2, h3 {
             margin-top: 0;
-            color: #3498db;
         }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .card-title {
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            color: var(--dark-color);
         }
+        
         input, select {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+            padding: 10px 12px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
         }
+        
+        input:focus, select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
         button {
-            background: #3498db;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+            width: 100%;
+            margin-top: 10px;
         }
+        
         button:hover {
-            background: #2980b9;
+            background-color: var(--secondary-color);
         }
-        .results {
-            margin-top: 20px;
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .appliance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .appliance-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
             padding: 15px;
-            background: #e8f4fc;
-            border-radius: 5px;
+            background: white;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .appliance-item {
+        
+        .appliance-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .appliance-card h4 {
+            margin-top: 0;
+            color: var(--dark-color);
+        }
+        
+        .appliance-meta {
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 0.9rem;
         }
-        .appliance-item input, .appliance-item select {
-            flex: 1;
-            margin-bottom: 0;
+        
+        .appliance-controls {
+            margin-top: 15px;
         }
-        .remove-btn {
-            background: #e74c3c;
-            padding: 8px;
+        
+        .results-section {
+            display: none;
+            margin-top: 30px;
         }
+        
+        .compatibility-summary {
+            background: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .compatibility-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .compatibility-item:last-child {
+            border-bottom: none;
+        }
+        
+        .compatibility-status {
+            font-weight: bold;
+        }
+        
+        .status-compatible {
+            color: var(--success-color);
+        }
+        
+        .status-warning {
+            color: var(--warning-color);
+        }
+        
+        .status-danger {
+            color: var(--danger-color);
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin: 15px 0;
+            font-size: 0.9rem;
         }
+        
         th, td {
+            padding: 12px 15px;
+            text-align: right;
             border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
         }
+        
         th {
-            background-color: #3498db;
+            background-color: var(--primary-color);
             color: white;
+            font-weight: bold;
         }
-        .recommended-appliances {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
-        .appliance-card {
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-            background: white;
-            width: calc(33% - 10px);
-            box-sizing: border-box;
+        
+        .recommendations {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid var(--primary-color);
         }
-        @media (max-width: 600px) {
-            .appliance-card {
-                width: 100%;
+        
+        .recommendations ul {
+            padding-right: 20px;
+        }
+        
+        .recommendations li {
+            margin-bottom: 8px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        @media (max-width: 768px) {
+            .appliance-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .card {
+                padding: 15px;
             }
         }
+        
+        /* تحسينات للعرض على الهواتف */
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 15px 0;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .appliance-card {
+                padding: 10px;
+            }
+        }
+        
+        /* تأثيرات مرئية */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>حاسبة الأجهزة المتوافقة مع النظام الشمسي</h1>
+        <header>
+            <h1>حاسبة التوافق بين النظام الشمسي والأجهزة</h1>
+            <p>حدد مواصفات نظامك الشمسي والأجهزة لتحليل التوافق</p>
+        </header>
         
-        <div class="section">
-            <h2 class="section-title">مواصفات النظام الشمسي</h2>
+        <div class="card">
+            <h2 class="card-title">مواصفات النظام الشمسي</h2>
             
-            <div class="input-group">
-                <label>الألواح الشمسية</label>
-                <select id="panel-size">
+            <div class="form-group">
+                <label for="panel-size">قدرة اللوح الشمسي (وات)</label>
+                <select id="panel-size" class="form-control">
                     <option value="100">100 وات</option>
                     <option value="150">150 وات</option>
                     <option value="200">200 وات</option>
@@ -134,12 +337,16 @@
                     <option value="450">450 وات</option>
                     <option value="500">500 وات</option>
                 </select>
-                <input type="number" id="panel-count" placeholder="عدد الألواح" value="1" min="1">
             </div>
             
-            <div class="input-group">
-                <label>المحول (الإنفرتر)</label>
-                <select id="inverter-size">
+            <div class="form-group">
+                <label for="panel-count">عدد الألواح الشمسية</label>
+                <input type="number" id="panel-count" min="1" value="1" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="inverter-size">سعة المحول (الإنفرتر) بالوات</label>
+                <select id="inverter-size" class="form-control">
                     <option value="500">500 وات</option>
                     <option value="1000">1000 وات</option>
                     <option value="1500">1500 وات</option>
@@ -149,25 +356,33 @@
                 </select>
             </div>
             
-            <div class="input-group">
-                <label>البطاريات</label>
-                <select id="battery-capacity">
+            <div class="form-group">
+                <label for="battery-capacity">سعة البطارية (أمبير/ساعة)</label>
+                <select id="battery-capacity" class="form-control">
                     <option value="50">50 أمبير/ساعة</option>
                     <option value="100">100 أمبير/ساعة</option>
                     <option value="150">150 أمبير/ساعة</option>
                     <option value="200">200 أمبير/ساعة</option>
                 </select>
-                <input type="number" id="battery-count" placeholder="عدد البطاريات" value="1" min="1">
-                <select id="battery-voltage">
+            </div>
+            
+            <div class="form-group">
+                <label for="battery-count">عدد البطاريات</label>
+                <input type="number" id="battery-count" min="1" value="1" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="battery-voltage">جهد النظام (فولت)</label>
+                <select id="battery-voltage" class="form-control">
                     <option value="12">12 فولت</option>
                     <option value="24">24 فولت</option>
                     <option value="48">48 فولت</option>
                 </select>
             </div>
             
-            <div class="input-group">
-                <label>ساعات التشمس اليومية</label>
-                <select id="sun-hours">
+            <div class="form-group">
+                <label for="sun-hours">ساعات التشمس اليومية المتوقعة</label>
+                <select id="sun-hours" class="form-control">
                     <option value="3">3 ساعات (شتاء)</option>
                     <option value="4">4 ساعات</option>
                     <option value="5" selected>5 ساعات (متوسط)</option>
@@ -176,9 +391,9 @@
                 </select>
             </div>
             
-            <div class="input-group">
-                <label>عدد أيام الاحتياطي المطلوبة</label>
-                <select id="backup-days">
+            <div class="form-group">
+                <label for="backup-days">عدد أيام الاحتياطي المطلوبة</label>
+                <select id="backup-days" class="form-control">
                     <option value="1">1 يوم</option>
                     <option value="2" selected>2 يوم</option>
                     <option value="3">3 أيام</option>
@@ -186,54 +401,139 @@
             </div>
         </div>
         
-        <div class="section">
-            <h2 class="section-title">الأجهزة المتاحة</h2>
-            <div id="available-appliances">
+        <div class="card">
+            <h2 class="card-title">الأجهزة الكهربائية</h2>
+            <p>اختر الأجهزة التي ترغب في تشغيلها بالنظام الشمسي:</p>
+            
+            <div id="appliances-container" class="appliance-grid">
                 <!-- سيتم ملؤها بالجافاسكربت -->
             </div>
+            
+            <button onclick="calculateCompatibility()" class="pulse">تحليل التوافق</button>
         </div>
         
-        <button onclick="calculateCompatibleAppliances()">حساب الأجهزة المتوافقة</button>
-        
-        <div class="results" id="results" style="display:none;">
-            <h2 class="section-title">نتائج الحساب</h2>
-            <div id="system-capacity"></div>
-            <div id="compatible-appliances"></div>
-            <div id="recommendations"></div>
+        <div id="results" class="results-section fade-in">
+            <div class="card">
+                <h2 class="card-title">نتائج تحليل التوافق</h2>
+                
+                <div class="compatibility-summary">
+                    <h3>ملخص التوافق</h3>
+                    <div id="compatibility-summary"></div>
+                </div>
+                
+                <h3>تفاصيل الطاقة</h3>
+                <div id="energy-details"></div>
+                
+                <h3>تفاصيل الأجهزة</h3>
+                <div id="appliances-details"></div>
+                
+                <h3>التوصيات الفنية</h3>
+                <div id="recommendations" class="recommendations"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // قاعدة بيانات للأجهزة الشائعة
+        // قاعدة بيانات للأجهزة الشائعة مع تفاصيل أكثر
         const commonAppliances = [
-            { name: "لمبة LED", wattage: 10, category: "إضاءة", dailyHours: 6 },
-            { name: "لمبة موفرة", wattage: 20, category: "إضاءة", dailyHours: 6 },
-            { name: "لمبة متوهجة", wattage: 60, category: "إضاءة", dailyHours: 6 },
-            { name: "ثلاجة صغيرة (8 قدم)", wattage: 120, category: "أجهزة منزلية", dailyHours: 24, surge: 300 },
-            { name: "ثلاجة متوسطة (12 قدم)", wattage: 150, category: "أجهزة منزلية", dailyHours: 24, surge: 400 },
-            { name: "ثلاجة كبيرة (16 قدم)", wattage: 200, category: "أجهزة منزلية", dailyHours: 24, surge: 500 },
-            { name: "مروحة سقف", wattage: 75, category: "تبريد", dailyHours: 8 },
-            { name: "مروحة طاولة", wattage: 50, category: "تبريد", dailyHours: 8 },
-            { name: "مكيف هواء صغير", wattage: 800, category: "تبريد", dailyHours: 6, surge: 1200 },
-            { name: "تلفزيون LED 32 بوصة", wattage: 50, category: "ترفيه", dailyHours: 5 },
-            { name: "تلفزيون بلازما 42 بوصة", wattage: 200, category: "ترفيه", dailyHours: 5 },
-            { name: "حاسوب محمول", wattage: 60, category: "إلكترونيات", dailyHours: 4 },
-            { name: "حاسوب مكتبي", wattage: 150, category: "إلكترونيات", dailyHours: 4, surge: 250 },
-            { name: "راوتر WiFi", wattage: 10, category: "إلكترونيات", dailyHours: 24 },
-            { name: "شاحن هاتف", wattage: 5, category: "إلكترونيات", dailyHours: 3 },
-            { name: "مايكروويف", wattage: 1000, category: "أجهزة مطبخ", dailyHours: 0.5, surge: 1500 },
-            { name: "غلاية كهربائية", wattage: 1500, category: "أجهزة مطبخ", dailyHours: 0.3, surge: 1800 },
-            { name: "فرن كهربائي صغير", wattage: 1200, category: "أجهزة مطبخ", dailyHours: 0.5, surge: 1500 },
-            { name: "غسالة ملابس", wattage: 500, category: "أجهزة منزلية", dailyHours: 1, surge: 800 },
-            { name: "مضخة ماء صغيرة", wattage: 250, category: "أجهزة منزلية", dailyHours: 1, surge: 400 }
+            { 
+                name: "لمبة LED", 
+                wattage: 10, 
+                category: "إضاءة", 
+                dailyHours: 6,
+                description: "إضاءة موفرة للطاقة، مناسبة للأنظمة الشمسية الصغيرة",
+                icon: "💡"
+            },
+            { 
+                name: "لمبة موفرة", 
+                wattage: 20, 
+                category: "إضاءة", 
+                dailyHours: 6,
+                description: "إضاءة موفرة للطاقة ولكنها تستهلك ضعف الليد",
+                icon: "💡"
+            },
+            { 
+                name: "ثلاجة صغيرة (8 قدم)", 
+                wattage: 120, 
+                category: "أجهزة منزلية", 
+                dailyHours: 24, 
+                surge: 300,
+                description: "ثلاجة صغيرة مناسبة للأنظمة المتوسطة، تستهلك طاقة بشكل متقطع",
+                icon: "❄️"
+            },
+            { 
+                name: "ثلاجة متوسطة (12 قدم)", 
+                wattage: 150, 
+                category: "أجهزة منزلية", 
+                dailyHours: 24, 
+                surge: 400,
+                description: "ثلاجة متوسطة الحجم تحتاج لنظام شمسي بقدرة جيدة",
+                icon: "❄️"
+            },
+            { 
+                name: "مروحة سقف", 
+                wattage: 75, 
+                category: "تبريد", 
+                dailyHours: 8,
+                description: "مروحة سقفية تستهلك طاقة معتدلة",
+                icon: "🌀"
+            },
+            { 
+                name: "تلفزيون LED 32 بوصة", 
+                wattage: 50, 
+                category: "ترفيه", 
+                dailyHours: 5,
+                description: "تلفزيون LED حديث موفر للطاقة",
+                icon: "📺"
+            },
+            { 
+                name: "حاسوب محمول", 
+                wattage: 60, 
+                category: "إلكترونيات", 
+                dailyHours: 4,
+                description: "حاسوب محمول عادي مع شاحنه",
+                icon: "💻"
+            },
+            { 
+                name: "راوتر WiFi", 
+                wattage: 10, 
+                category: "إلكترونيات", 
+                dailyHours: 24,
+                description: "جهاز راوتر لاسلكي يعمل بشكل مستمر",
+                icon: "📶"
+            },
+            { 
+                name: "شاحن هاتف", 
+                wattage: 5, 
+                category: "إلكترونيات", 
+                dailyHours: 3,
+                description: "شاحن هاتف ذكي عادي",
+                icon: "🔌"
+            },
+            { 
+                name: "غسالة ملابس", 
+                wattage: 500, 
+                category: "أجهزة منزلية", 
+                dailyHours: 1, 
+                surge: 800,
+                description: "غسالة ملابس عادية، تستهلك طاقة عالية أثناء التشغيل",
+                icon: "🧺"
+            },
+            { 
+                name: "مضخة ماء صغيرة", 
+                wattage: 250, 
+                category: "أجهزة منزلية", 
+                dailyHours: 1, 
+                surge: 400,
+                description: "مضخة ماء صغيرة لاستخدامات محدودة",
+                icon: "💧"
+            }
         ];
 
         // عرض الأجهزة المتاحة
         function displayAvailableAppliances() {
-            const container = document.getElementById('available-appliances');
-            container.innerHTML = '<h3>اختر الأجهزة التي ترغب في تشغيلها:</h3><div class="recommended-appliances" id="appliances-list"></div>';
-            
-            const appliancesList = document.getElementById('appliances-list');
+            const container = document.getElementById('appliances-container');
+            container.innerHTML = '';
             
             // تصنيف الأجهزة حسب الفئة
             const categorized = {};
@@ -246,37 +546,54 @@
             
             // عرض الأجهزة حسب الفئة
             for (const category in categorized) {
-                const categoryHeader = document.createElement('h4');
+                const categoryHeader = document.createElement('h3');
                 categoryHeader.textContent = category;
-                appliancesList.appendChild(categoryHeader);
+                categoryHeader.style.gridColumn = '1 / -1';
+                categoryHeader.style.color = '#3498db';
+                categoryHeader.style.borderBottom = '1px solid #eee';
+                categoryHeader.style.paddingBottom = '8px';
+                container.appendChild(categoryHeader);
                 
                 categorized[category].forEach(appliance => {
                     const card = document.createElement('div');
                     card.className = 'appliance-card';
                     card.innerHTML = `
-                        <h4>${appliance.name}</h4>
-                        <p>الاستهلاك: ${appliance.wattage} وات</p>
-                        <p>${appliance.surge ? `قمة التحميل: ${appliance.surge} وات` : ''}</p>
-                        <label>
-                            <input type="checkbox" class="appliance-check" data-wattage="${appliance.wattage}" 
-                                   data-surge="${appliance.surge || appliance.wattage}" 
-                                   data-name="${appliance.name}">
-                            اختر
-                        </label>
-                        <label>عدد الساعات اليومية: 
-                            <input type="number" class="appliance-hours" value="${appliance.dailyHours}" min="0" max="24" step="0.5">
-                        </label>
-                        <label>العدد: 
-                            <input type="number" class="appliance-quantity" value="1" min="1">
-                        </label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 1.5rem;">${appliance.icon}</span>
+                            <h4 style="margin: 0;">${appliance.name}</h4>
+                        </div>
+                        <div class="appliance-meta">
+                            <span><strong>الاستهلاك:</strong> ${appliance.wattage} وات</span>
+                            ${appliance.surge ? `<span><strong>قمة التحميل:</strong> ${appliance.surge} وات</span>` : ''}
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666; margin: 10px 0;">${appliance.description}</p>
+                        <div class="appliance-controls">
+                            <label style="display: block; margin-bottom: 8px;">
+                                <input type="checkbox" class="appliance-check" data-wattage="${appliance.wattage}" 
+                                       data-surge="${appliance.surge || appliance.wattage}" 
+                                       data-name="${appliance.name}"
+                                       data-icon="${appliance.icon}">
+                                اختر هذا الجهاز
+                            </label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div>
+                                    <label style="font-size: 0.8rem;">عدد الساعات اليومية</label>
+                                    <input type="number" class="appliance-hours" value="${appliance.dailyHours}" min="0" max="24" step="0.5" style="width: 100%;">
+                                </div>
+                                <div>
+                                    <label style="font-size: 0.8rem;">العدد</label>
+                                    <input type="number" class="appliance-quantity" value="1" min="1" style="width: 100%;">
+                                </div>
+                            </div>
+                        </div>
                     `;
-                    appliancesList.appendChild(card);
+                    container.appendChild(card);
                 });
             }
         }
 
-        // حساب الأجهزة المتوافقة
-        function calculateCompatibleAppliances() {
+        // حساب التوافق
+        function calculateCompatibility() {
             // مواصفات النظام
             const panelSize = parseFloat(document.getElementById('panel-size').value);
             const panelCount = parseInt(document.getElementById('panel-count').value);
@@ -302,6 +619,7 @@
             let totalRunningWattage = 0;
             let totalDailyConsumption = 0;
             let maxSurge = 0;
+            let applianceProblems = [];
             
             document.querySelectorAll('.appliance-card').forEach(card => {
                 const checkbox = card.querySelector('.appliance-check');
@@ -309,6 +627,7 @@
                     const wattage = parseFloat(checkbox.dataset.wattage);
                     const surge = parseFloat(checkbox.dataset.surge);
                     const name = checkbox.dataset.name;
+                    const icon = checkbox.dataset.icon;
                     const hours = parseFloat(card.querySelector('.appliance-hours').value);
                     const quantity = parseInt(card.querySelector('.appliance-quantity').value);
                     
@@ -316,70 +635,179 @@
                     const applianceSurge = surge * quantity;
                     const dailyConsumption = applianceWattage * hours;
                     
+                    // تحقق من مشاكل التوافق
+                    const problems = [];
+                    if (applianceSurge > inverterSize) {
+                        problems.push(`يتجاوز حمل البدء (${applianceSurge} وات) سعة المحول (${inverterSize} وات)`);
+                    }
+                    if (applianceWattage > inverterSize) {
+                        problems.push(`يتجاوز الاستهلاك (${applianceWattage} وات) سعة المحول (${inverterSize} وات)`);
+                    }
+                    
                     selectedAppliances.push({
                         name,
+                        icon,
                         wattage,
                         quantity,
                         hours,
                         applianceWattage,
                         applianceSurge,
-                        dailyConsumption
+                        dailyConsumption,
+                        problems
                     });
                     
                     totalRunningWattage += applianceWattage;
                     totalDailyConsumption += dailyConsumption;
                     if (applianceSurge > maxSurge) maxSurge = applianceSurge;
+                    if (problems.length > 0) {
+                        applianceProblems.push({
+                            name,
+                            icon,
+                            problems
+                        });
+                    }
                 }
             });
             
+            // تحليل التوافق العام
+            const compatibilityIssues = [];
+            
+            // 1. تحقق من سعة المحول
+            let inverterCompatibility = 'excellent';
+            if (maxSurge > inverterSize) {
+                compatibilityIssues.push(`بعض الأجهزة تحتاج إلى محول أكبر (أقصى حمل بدء: ${maxSurge} وات)`);
+                inverterCompatibility = 'poor';
+            } else if (totalRunningWattage > inverterSize * 0.8) {
+                compatibilityIssues.push(`إجمالي استهلاك الأجهزة (${totalRunningWattage} وات) قريب من سعة المحول (${inverterSize} وات) - تجنب تشغيل جميع الأجهزة معًا`);
+                inverterCompatibility = 'fair';
+            }
+            
+            // 2. تحقق من الطاقة المنتجة
+            let energyCompatibility = 'excellent';
+            if (totalDailyConsumption > dailyUsableEnergy * 1.2) {
+                compatibilityIssues.push(`الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) أعلى بكثير من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة)`);
+                energyCompatibility = 'poor';
+            } else if (totalDailyConsumption > dailyUsableEnergy) {
+                compatibilityIssues.push(`الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) أعلى قليلاً من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة)`);
+                energyCompatibility = 'fair';
+            } else if (totalDailyConsumption > dailyUsableEnergy * 0.8) {
+                compatibilityIssues.push(`الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) قريب من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة)`);
+                energyCompatibility = 'good';
+            }
+            
+            // 3. تحقق من سعة البطاريات
+            let batteryCompatibility = 'excellent';
+            const batteryDays = usableBatteryCapacity / totalDailyConsumption;
+            if (batteryDays < backupDays * 0.5) {
+                compatibilityIssues.push(`سعة البطاريات تكفي لـ ${batteryDays.toFixed(1)} أيام فقط من أصل ${backupDays} أيام مطلوبة`);
+                batteryCompatibility = 'poor';
+            } else if (batteryDays < backupDays) {
+                compatibilityIssues.push(`سعة البطاريات تكفي لـ ${batteryDays.toFixed(1)} أيام (المطلوب ${backupDays} أيام)`);
+                batteryCompatibility = 'fair';
+            }
+            
             // عرض النتائج
-            displayResults(totalPanelWattage, inverterSize, totalBatteryCapacity, dailyEnergyProduction, 
-                         dailyUsableEnergy, selectedAppliances, totalRunningWattage, 
-                         totalDailyConsumption, maxSurge);
+            displayResults(
+                panelSize, panelCount, totalPanelWattage,
+                inverterSize, 
+                batteryCapacity, batteryCount, batteryVoltage, totalBatteryCapacity,
+                sunHours, backupDays,
+                dailyEnergyProduction, dailyUsableEnergy,
+                selectedAppliances, totalRunningWattage, totalDailyConsumption, maxSurge,
+                inverterCompatibility, energyCompatibility, batteryCompatibility,
+                compatibilityIssues, applianceProblems
+            );
         }
         
         // عرض النتائج
-        function displayResults(panelWattage, inverterSize, batteryCapacity, dailyEnergyProduction,
-                             dailyUsableEnergy, appliances, totalWattage, totalDailyConsumption, maxSurge) {
+        function displayResults(
+            panelSize, panelCount, totalPanelWattage,
+            inverterSize, 
+            batteryCapacity, batteryCount, batteryVoltage, totalBatteryCapacity,
+            sunHours, backupDays,
+            dailyEnergyProduction, dailyUsableEnergy,
+            appliances, totalWattage, totalDailyConsumption, maxSurge,
+            inverterCompatibility, energyCompatibility, batteryCompatibility,
+            compatibilityIssues, applianceProblems
+        ) {
             const resultsDiv = document.getElementById('results');
-            const systemCapacityDiv = document.getElementById('system-capacity');
-            const compatibleAppliancesDiv = document.getElementById('compatible-appliances');
+            const summaryDiv = document.getElementById('compatibility-summary');
+            const energyDiv = document.getElementById('energy-details');
+            const appliancesDiv = document.getElementById('appliances-details');
             const recommendationsDiv = document.getElementById('recommendations');
             
-            // عرض سعة النظام
-            systemCapacityDiv.innerHTML = `
-                <h3>سعة النظام الشمسي</h3>
+            // ملخص التوافق
+            summaryDiv.innerHTML = `
+                <div class="compatibility-item">
+                    <span>توافق المحول (الإنفرتر):</span>
+                    <span class="compatibility-status status-${inverterCompatibility}">
+                        ${getCompatibilityText(inverterCompatibility)}
+                        ${inverterCompatibility !== 'excellent' ? `(${totalWattage} وات / ${inverterSize} وات)` : ''}
+                    </span>
+                </div>
+                <div class="compatibility-item">
+                    <span>توافق الطاقة المنتجة:</span>
+                    <span class="compatibility-status status-${energyCompatibility}">
+                        ${getCompatibilityText(energyCompatibility)}
+                        ${energyCompatibility !== 'excellent' ? `(${totalDailyConsumption.toFixed(2)} وات/ساعة / ${dailyUsableEnergy.toFixed(2)} وات/ساعة)` : ''}
+                    </span>
+                </div>
+                <div class="compatibility-item">
+                    <span>توافق سعة البطاريات:</span>
+                    <span class="compatibility-status status-${batteryCompatibility}">
+                        ${getCompatibilityText(batteryCompatibility)}
+                        ${batteryCompatibility !== 'excellent' ? `(${(totalBatteryCapacity * 0.8 / totalDailyConsumption).toFixed(1)} أيام / ${backupDays} أيام مطلوبة)` : ''}
+                    </span>
+                </div>
+                
+                ${compatibilityIssues.length > 0 ? `
+                    <div style="margin-top: 15px; padding: 10px; background: #fff8f8; border-radius: 5px; border-right: 3px solid var(--danger-color);">
+                        <h4 style="margin-top: 0; color: var(--danger-color);">ملاحظات هامة:</h4>
+                        <ul style="padding-right: 20px;">
+                            ${compatibilityIssues.map(issue => `<li>${issue}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+            `;
+            
+            // تفاصيل الطاقة
+            energyDiv.innerHTML = `
                 <table>
                     <tr>
                         <th>العنصر</th>
                         <th>القيمة</th>
+                        <th>النسبة من الاحتياج</th>
                     </tr>
                     <tr>
-                        <td>قدرة الألواح الشمسية</td>
-                        <td>${panelWattage} وات</td>
+                        <td>إجمالي قدرة الألواح</td>
+                        <td>${totalPanelWattage} وات</td>
+                        <td>${calculatePercentage(totalPanelWattage, totalWattage * (sunHours < 5 ? 1.5 : 1))}% من الحمل الكلي</td>
                     </tr>
                     <tr>
-                        <td>طاقة الألواح اليومية (${document.getElementById('sun-hours').value} ساعات شمس)</td>
+                        <td>الطاقة المنتجة يومياً</td>
                         <td>${dailyEnergyProduction} وات/ساعة</td>
+                        <td>${calculatePercentage(dailyEnergyProduction, totalDailyConsumption)}% من الاستهلاك اليومي</td>
                     </tr>
                     <tr>
-                        <td>سعة المحول (الإنفرتر)</td>
+                        <td>سعة المحول</td>
                         <td>${inverterSize} وات</td>
+                        <td>${calculatePercentage(inverterSize, maxSurge)}% من أقصى حمل بدء</td>
                     </tr>
                     <tr>
                         <td>سعة البطاريات</td>
-                        <td>${batteryCapacity} وات/ساعة (${document.getElementById('backup-days').value} أيام احتياطي)</td>
+                        <td>${totalBatteryCapacity} وات/ساعة</td>
+                        <td>تكفي لـ ${(totalBatteryCapacity * 0.8 / totalDailyConsumption).toFixed(1)} أيام</td>
                     </tr>
                     <tr>
-                        <td>الطاقة القابلة للاستخدام يومياً</td>
-                        <td>${dailyUsableEnergy.toFixed(2)} وات/ساعة</td>
+                        <td>الاستهلاك اليومي</td>
+                        <td>${totalDailyConsumption.toFixed(2)} وات/ساعة</td>
+                        <td>${calculatePercentage(totalDailyConsumption, dailyUsableEnergy)}% من الطاقة المتاحة</td>
                     </tr>
                 </table>
             `;
             
-            // عرض الأجهزة المتوافقة
+            // تفاصيل الأجهزة
             let applianceTable = `
-                <h3>الأجهزة المختارة وتوافقها مع النظام</h3>
                 <table>
                     <tr>
                         <th>الجهاز</th>
@@ -392,62 +820,96 @@
             `;
             
             appliances.forEach(app => {
-                const compatibleEnergy = app.dailyConsumption <= dailyUsableEnergy;
-                const compatibleInverter = app.applianceSurge <= inverterSize;
-                const status = compatibleEnergy && compatibleInverter ? '✔️ متوافق' : '⚠️ غير متوافق';
+                const status = app.problems.length > 0 ? 'غير متوافق' : 'متوافق';
+                const statusClass = app.problems.length > 0 ? 'status-danger' : 'status-compatible';
                 
                 applianceTable += `
                     <tr>
-                        <td>${app.name}</td>
+                        <td>${app.icon} ${app.name}</td>
                         <td>${app.quantity}</td>
                         <td>${app.applianceWattage}</td>
                         <td>${app.hours}</td>
                         <td>${app.dailyConsumption.toFixed(2)}</td>
-                        <td style="color: ${compatibleEnergy && compatibleInverter ? 'green' : 'red'}">${status}</td>
+                        <td class="${statusClass}">${status}</td>
                     </tr>
                 `;
+                
+                if (app.problems.length > 0) {
+                    applianceTable += `
+                        <tr style="background-color: #fff8f8;">
+                            <td colspan="6" style="text-align: right; padding-right: 30px; color: var(--danger-color);">
+                                <strong>ملاحظات:</strong> ${app.problems.join('، ')}
+                            </td>
+                        </tr>
+                    `;
+                }
             });
             
             applianceTable += `
-                    <tr>
-                        <td colspan="2"><strong>الإجمالي</strong></td>
-                        <td><strong>${totalWattage}</strong></td>
+                    <tr style="font-weight: bold;">
+                        <td colspan="2">الإجمالي</td>
+                        <td>${totalWattage}</td>
                         <td></td>
-                        <td><strong>${totalDailyConsumption.toFixed(2)}</strong></td>
+                        <td>${totalDailyConsumption.toFixed(2)}</td>
                         <td></td>
                     </tr>
                 </table>
             `;
             
-            compatibleAppliancesDiv.innerHTML = applianceTable;
+            appliancesDiv.innerHTML = applianceTable;
             
             // التوصيات
-            let recs = '<h3>تحليل التوافق</h3><ul>';
+            let recs = '<ul>';
             
-            if (totalDailyConsumption > dailyUsableEnergy) {
-                const percent = (totalDailyConsumption / dailyUsableEnergy * 100).toFixed(0);
-                recs += `<li>الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) أعلى من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة) بنسبة ${percent}%</li>`;
-            } else {
-                const percent = (totalDailyConsumption / dailyUsableEnergy * 100).toFixed(0);
-                recs += `<li>الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) يشكل ${percent}% من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة)</li>`;
+            if (inverterCompatibility === 'poor') {
+                recs += `<li>ترقية المحول إلى سعة أكبر (${Math.ceil(maxSurge / 500) * 500} وات على الأقل)</li>`;
+            } else if (inverterCompatibility === 'fair') {
+                recs += `<li>تجنب تشغيل جميع الأجهزة في نفس الوقت لتجنب حمل المحول الزائد</li>`;
             }
             
-            if (maxSurge > inverterSize) {
-                recs += `<li>بعض الأجهزة تحتاج إلى محول (إنفرتر) بقدرة أعلى (القمة الحالية: ${maxSurge} وات)</li>`;
+            if (energyCompatibility === 'poor') {
+                recs += `<li>زيادة عدد الألواح الشمسية لتحقيق توازن بين الإنتاج والاستهلاك</li>`;
+                recs += `<li>تقليل ساعات تشغيل بعض الأجهزة لتقليل الاستهلاك اليومي</li>`;
+            } else if (energyCompatibility === 'fair') {
+                recs += `<li>مراقبة أداء النظام وقد تحتاج إلى تقليل الاستهلاك في الأيام الغائمة</li>`;
             }
             
-            if (totalWattage > inverterSize * 0.8) {
-                recs += `<li>إجمالي استهلاك الأجهزة (${totalWattage} وات) قريب من سعة المحول (${inverterSize} وات)، يوصى بعدم تشغيل جميع الأجهزة في نفس الوقت</li>`;
+            if (batteryCompatibility === 'poor') {
+                recs += `<li>زيادة عدد أو سعة البطاريات لتوفير احتياطي كافٍ</li>`;
+            } else if (batteryCompatibility === 'fair') {
+                recs += `<li>مراقبة حالة شحن البطاريات وقد تحتاج إلى تقليل الاستهلاك في الأيام المتتالية الغائمة</li>`;
             }
             
-            if (recs === '<h3>تحليل التوافق</h3><ul>') {
-                recs += '<li>جميع الأجهزة المختارة متوافقة مع النظام الحالي ✔️</li>';
+            if (applianceProblems.length > 0) {
+                recs += `<li>بعض الأجهزة غير متوافقة مع النظام الحالي، يوصى باستبدالها بأجهزة أقل استهلاكاً للطاقة</li>`;
+            }
+            
+            if (recs === '<ul>') {
+                recs += '<li>النظام الحالي متوافق مع جميع الأجهزة المختارة ✔️</li>';
             }
             
             recs += '</ul>';
             recommendationsDiv.innerHTML = recs;
             
+            // عرض قسم النتائج
             resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // دالة مساعدة للحصول على نص التوافق
+        function getCompatibilityText(status) {
+            switch(status) {
+                case 'excellent': return 'ممتاز';
+                case 'good': return 'جيد';
+                case 'fair': return 'متوسط';
+                case 'poor': return 'ضعيف';
+                default: return 'غير معروف';
+            }
+        }
+        
+        // دالة مساعدة لحساب النسبة المئوية
+        function calculatePercentage(part, whole) {
+            return whole > 0 ? Math.min(100, Math.round((part / whole) * 100)) : 0;
         }
 
         // تهيئة الصفحة عند التحميل
@@ -456,4 +918,4 @@
         };
     </script>
 </body>
-  </html>
+    </html>
