@@ -399,6 +399,63 @@
             to { opacity: 1; }
         }
         
+        /* أنماط مشاركة واتساب */
+        .share-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .share-btn img {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .whatsapp {
+            background-color: #25D366;
+            color: white;
+        }
+        
+        .signature {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .signature a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .signature a:hover {
+            text-decoration: underline;
+        }
+        
         @media (max-width: 768px) {
             .appliance-grid {
                 grid-template-columns: 1fr;
@@ -419,6 +476,10 @@
             }
             
             .appliance-controls {
+                flex-direction: column;
+            }
+            
+            .share-buttons {
                 flex-direction: column;
             }
         }
@@ -443,6 +504,10 @@
             
             .appliance-card {
                 padding: 10px;
+            }
+            
+            .share-btn {
+                justify-content: center;
             }
         }
     </style>
@@ -631,6 +696,19 @@
                 
                 <h3>التوصيات الفنية</h3>
                 <div id="recommendations" class="recommendations"></div>
+                
+                <div class="share-section" style="display: none;">
+                    <h3>📤 مشاركة النتائج</h3>
+                    <div class="share-buttons">
+                        <button id="whatsapp-share" class="share-btn whatsapp">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب">
+                            مشاركة عبر واتساب
+                        </button>
+                    </div>
+                    <div class="signature">
+                        <p>تصميم: <a href="mailto:merghanigasimosman@gmail.com">ميرغني أبوالقاسم عثمان</a></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1045,9 +1123,42 @@
             recs += '</ul>';
             recommendationsDiv.innerHTML = recs;
             
+            // إظهار قسم المشاركة
+            document.querySelector('.share-section').style.display = 'block';
+            
             resultsDiv.style.display = 'block';
             resultsDiv.scrollIntoView({ behavior: 'smooth' });
         }
+        
+        // دالة مشاركة عبر واتساب
+        document.getElementById('whatsapp-share').addEventListener('click', function() {
+            const panelSize = document.getElementById('panel-size').value;
+            const panelCount = document.getElementById('panel-count').value;
+            const inverterSize = document.getElementById('inverter-size').value;
+            const batteryCapacity = document.getElementById('battery-capacity').value;
+            const batteryCount = document.getElementById('battery-count').value;
+            
+            let selectedAppliances = [];
+            document.querySelectorAll('.appliance-card').forEach(card => {
+                const checkbox = card.querySelector('.appliance-check');
+                if (checkbox.checked) {
+                    const name = checkbox.dataset.name;
+                    const quantity = card.querySelector('.appliance-quantity').value;
+                    const hours = card.querySelector('.appliance-hours').value;
+                    selectedAppliances.push(`${name} (${quantity}×${hours}س)`);
+                }
+            });
+            
+            const message = `*نتائج حساب النظام الشمسي*%0A%0A` +
+                           `*الألواح الشمسية:* ${panelCount} × ${panelSize} وات%0A` +
+                           `*المحول:* ${inverterSize} وات%0A` +
+                           `*البطاريات:* ${batteryCount} × ${batteryCapacity} أمبير%0A%0A` +
+                           `*الأجهزة المختارة:*%0A${selectedAppliances.join('%0A')}%0A%0A` +
+                           `*تصميم:* ميرغني أبوالقاسم عثمان%0A` +
+                           `للتواصل: merghanigasimosman@gmail.com`;
+            
+            window.open(`https://wa.me/?text=${message}`, '_blank');
+        });
         
         function getCompatibilityText(status) {
             switch(status) {
