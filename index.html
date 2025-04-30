@@ -123,6 +123,14 @@
             background-color: #c0392b;
         }
         
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
         .appliance-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -136,6 +144,7 @@
             padding: 15px;
             background: white;
             transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
         }
         
         .appliance-card:hover {
@@ -262,7 +271,6 @@
             color: #721c24;
         }
         
-        /* أنماط جديدة للإضافات */
         .energy-calculation {
             background: #f8f9fa;
             border-left: 4px solid #3498db;
@@ -379,7 +387,6 @@
             padding: 5px;
         }
         
-        /* تأثيرات مرئية */
         .pulse {
             animation: pulse 2s infinite;
         }
@@ -399,7 +406,6 @@
             to { opacity: 1; }
         }
         
-        /* أنماط مشاركة واتساب */
         .share-section {
             margin-top: 20px;
             text-align: center;
@@ -456,6 +462,97 @@
             text-decoration: underline;
         }
         
+        /* أنماط جديدة للإضافات */
+        .custom-appliance-form {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-right: 4px solid var(--primary-color);
+        }
+        
+        .custom-appliance-form h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .custom-appliance-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .custom-appliance-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .custom-appliance-controls button {
+            width: auto;
+            margin-top: 0;
+        }
+        
+        .appliance-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .appliance-actions button {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            width: auto;
+            margin: 0;
+        }
+        
+        .edit-btn {
+            background-color: var(--warning-color);
+        }
+        
+        .delete-btn {
+            background-color: var(--danger-color);
+        }
+        
+        .advanced-options {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-right: 4px solid var(--primary-color);
+        }
+        
+        .advanced-options h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .advanced-options-content {
+            display: none;
+        }
+        
+        .advanced-options.active .advanced-options-content {
+            display: block;
+        }
+        
+        .custom-input-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .custom-input-option input {
+            width: 100px;
+        }
+        
         @media (max-width: 768px) {
             .appliance-grid {
                 grid-template-columns: 1fr;
@@ -481,6 +578,10 @@
             
             .share-buttons {
                 flex-direction: column;
+            }
+            
+            .custom-appliance-fields {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -534,7 +635,13 @@
                     <option value="400">400 وات</option>
                     <option value="450">450 وات</option>
                     <option value="500">500 وات</option>
+                    <option value="550">550 وات</option>
+                    <option value="600">600 وات</option>
+                    <option value="custom">إدخال قيمة مخصصة</option>
                 </select>
+                <div id="custom-panel-size-container" style="display: none; margin-top: 10px;">
+                    <input type="number" id="custom-panel-size" min="1" placeholder="أدخل القدرة بالوات" class="form-control">
+                </div>
             </div>
             
             <div class="form-group">
@@ -545,13 +652,21 @@
             <div class="form-group">
                 <label for="inverter-size">سعة المحول (الإنفرتر) بالوات</label>
                 <select id="inverter-size" class="form-control">
+                    <option value="300">300 وات</option>
                     <option value="500">500 وات</option>
+                    <option value="800">800 وات</option>
                     <option value="1000">1000 وات</option>
                     <option value="1500">1500 وات</option>
                     <option value="2000">2000 وات</option>
                     <option value="3000">3000 وات</option>
                     <option value="5000">5000 وات</option>
+                    <option value="7500">7500 وات</option>
+                    <option value="10000">10000 وات</option>
+                    <option value="custom">إدخال قيمة مخصصة</option>
                 </select>
+                <div id="custom-inverter-size-container" style="display: none; margin-top: 10px;">
+                    <input type="number" id="custom-inverter-size" min="1" placeholder="أدخل السعة بالوات" class="form-control">
+                </div>
             </div>
             
             <div class="form-group">
@@ -561,7 +676,15 @@
                     <option value="100">100 أمبير/ساعة</option>
                     <option value="150">150 أمبير/ساعة</option>
                     <option value="200">200 أمبير/ساعة</option>
+                    <option value="250">250 أمبير/ساعة</option>
+                    <option value="300">300 أمبير/ساعة</option>
+                    <option value="400">400 أمبير/ساعة</option>
+                    <option value="500">500 أمبير/ساعة</option>
+                    <option value="custom">إدخال قيمة مخصصة</option>
                 </select>
+                <div id="custom-battery-capacity-container" style="display: none; margin-top: 10px;">
+                    <input type="number" id="custom-battery-capacity" min="1" placeholder="أدخل السعة بأمبير/ساعة" class="form-control">
+                </div>
             </div>
             
             <div class="form-group">
@@ -597,6 +720,32 @@
                     <option value="3">3 أيام</option>
                 </select>
             </div>
+            
+            <div class="advanced-options">
+                <h3 onclick="toggleAdvancedOptions()">
+                    <span>⚙️ خيارات متقدمة</span>
+                    <span>▼</span>
+                </h3>
+                <div class="advanced-options-content">
+                    <div class="form-group">
+                        <label for="safety-margin">هامش الأمان (%)</label>
+                        <input type="number" id="safety-margin" min="0" max="50" value="20" class="form-control">
+                        <p class="help-text">نسبة زيادة عن الاستهلاك المتوقع لضمان عدم النقص</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="system-losses">نسبة الخسائر (%)</label>
+                        <input type="number" id="system-losses" min="0" max="30" value="15" class="form-control">
+                        <p class="help-text">خسائر النظام (أسلاك، تحويل، إلخ)</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="battery-dod">عمق تفريغ البطارية (%)</label>
+                        <input type="number" id="battery-dod" min="20" max="80" value="50" class="form-control">
+                        <p class="help-text">النسبة المئوية للطاقة التي يمكن استخدامها من البطارية</p>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="card">
@@ -613,6 +762,43 @@
                 </div>
                 
                 <div id="appliances-container" class="appliance-grid"></div>
+                
+                <div class="custom-appliance-form">
+                    <h3>➕ إضافة جهاز جديد</h3>
+                    <div class="custom-appliance-fields">
+                        <div class="form-group">
+                            <label for="custom-appliance-name">اسم الجهاز</label>
+                            <input type="text" id="custom-appliance-name" placeholder="مثال: مكيف سبليت 2 طن">
+                        </div>
+                        <div class="form-group">
+                            <label for="custom-appliance-wattage">الاستهلاك (وات)</label>
+                            <input type="number" id="custom-appliance-wattage" min="1" placeholder="مثال: 2000">
+                        </div>
+                        <div class="form-group">
+                            <label for="custom-appliance-surge">قمة التحميل (وات)</label>
+                            <input type="number" id="custom-appliance-surge" min="1" placeholder="مثال: 4000">
+                        </div>
+                        <div class="form-group">
+                            <label for="custom-appliance-hours">ساعات التشغيل اليومية</label>
+                            <input type="number" id="custom-appliance-hours" min="0" step="0.5" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="custom-appliance-category">الفئة</label>
+                            <select id="custom-appliance-category">
+                                <option value="custom">أخرى</option>
+                                <option value="lighting">الإضاءة</option>
+                                <option value="water">مضخات المياه</option>
+                                <option value="kitchen">أجهزة المطبخ</option>
+                                <option value="electronics">الإلكترونيات</option>
+                                <option value="cooling">التبريد</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="custom-appliance-controls">
+                        <button id="add-custom-appliance" class="btn-success">إضافة الجهاز</button>
+                        <button id="reset-custom-appliance" class="btn-danger">إعادة تعيين</button>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -652,9 +838,9 @@
                 <p class="help-text">السعة النظرية الكلية لبطارياتك</p>
                 
                 <div class="formula sub-calculation">
-                    السعة القابلة للاستخدام: 4800 × 80% = <strong id="usable-battery-capacity">3840</strong> وات/ساعة
+                    السعة القابلة للاستخدام: 4800 × <span id="battery-dod-display">50</span>% = <strong id="usable-battery-capacity">2400</strong> وات/ساعة
                 </div>
-                <p class="help-text">نستخدم 80% فقط من السعة للحفاظ على عمر البطاريات</p>
+                <p class="help-text">نستخدم جزءاً من السعة للحفاظ على عمر البطاريات</p>
             </div>
             
             <div class="calculation-step">
@@ -662,9 +848,9 @@
                 <div class="formula">
                     الحد الأدنى بين:<br>
                     - الطاقة المنتجة: <span id="daily-production-2">6000</span> وات/ساعة<br>
-                    - الطاقة المخزنة: <span id="usable-battery-capacity-2">3840</span> ÷ 
+                    - الطاقة المخزنة: <span id="usable-battery-capacity-2">2400</span> ÷ 
                     <span id="backup-days-display">2</span> يوم = 
-                    <strong id="daily-usable-energy">1920</strong> وات/ساعة
+                    <strong id="daily-usable-energy">1200</strong> وات/ساعة
                 </div>
                 <p class="help-text">هذه هي الطاقة المضمونة المتاحة لك يومياً</p>
             </div>
@@ -673,7 +859,7 @@
                 <h3>النتيجة النهائية</h3>
                 <div class="result">
                     طاقة منتجة يومياً: <strong id="final-daily-production">6000</strong> وات/ساعة<br>
-                    طاقة قابلة للاستخدام: <strong id="final-usable-energy">1920</strong> وات/ساعة<br>
+                    طاقة قابلة للاستخدام: <strong id="final-usable-energy">1200</strong> وات/ساعة<br>
                     تكفي لـ <strong id="battery-autonomy">2</strong> أيام بدون شمس
                 </div>
             </div>
@@ -714,7 +900,7 @@
     </div>
 
     <script>
-        // قاعدة بيانات موسعة للأجهزة مع إضافة فريزر 12 قدم
+        // قاعدة بيانات موسعة للأجهزة
         const commonAppliances = [
             // الإضاءة
             { id: 1, name: "لمبة LED 10 وات", wattage: 10, category: "lighting", dailyHours: 6, icon: "💡" },
@@ -769,6 +955,10 @@
             { id: 20, name: "مولد أكسجين طبي", wattage: 300, category: "medical", dailyHours: 24, icon: "🏥" }
         ];
 
+        // متغيرات التطبيق
+        let customAppliances = [];
+        let editingApplianceId = null;
+
         // تصفية الأجهزة حسب الفئة
         function filterAppliances(category) {
             const tabs = document.querySelectorAll('.tab-btn');
@@ -779,8 +969,8 @@
             container.innerHTML = '';
             
             const filtered = category === 'all' 
-                ? commonAppliances 
-                : commonAppliances.filter(app => app.category === category);
+                ? [...commonAppliances, ...customAppliances]
+                : [...commonAppliances, ...customAppliances].filter(app => app.category === category);
             
             displayAppliances(filtered);
         }
@@ -788,14 +978,16 @@
         // عرض الأجهزة
         function displayAppliances(appliances) {
             const container = document.getElementById('appliances-container');
+            container.innerHTML = '';
             
             appliances.forEach(appliance => {
                 const card = document.createElement('div');
                 card.className = 'appliance-card';
+                card.dataset.id = appliance.id;
                 card.innerHTML = `
                     <div class="appliance-header">
                         <span class="appliance-icon">${appliance.icon}</span>
-                        <h4>${appliance.name}</h4>
+                        <h4>${appliance.name} ${appliance.id > 10000 ? '<span style="color:#666;font-size:0.8em;">(مخصص)</span>' : ''}</h4>
                     </div>
                     <div class="appliance-details">
                         <div><strong>الاستهلاك:</strong> ${appliance.wattage} وات</div>
@@ -820,26 +1012,153 @@
                             <input type="number" class="appliance-hours" value="${appliance.dailyHours}" min="0" step="0.5">
                         </div>
                     </div>
+                    ${appliance.id > 10000 ? `
+                    <div class="appliance-actions">
+                        <button class="edit-btn" onclick="editAppliance(${appliance.id})">تعديل</button>
+                        <button class="delete-btn" onclick="deleteAppliance(${appliance.id})">حذف</button>
+                    </div>
+                    ` : ''}
                 `;
                 container.appendChild(card);
             });
         }
 
+        // تعديل جهاز
+        function editAppliance(id) {
+            const appliance = customAppliances.find(a => a.id === id);
+            if (!appliance) return;
+            
+            editingApplianceId = id;
+            
+            document.getElementById('custom-appliance-name').value = appliance.name;
+            document.getElementById('custom-appliance-wattage').value = appliance.wattage;
+            document.getElementById('custom-appliance-surge').value = appliance.surge;
+            document.getElementById('custom-appliance-hours').value = appliance.dailyHours;
+            document.getElementById('custom-appliance-category').value = appliance.category;
+            
+            document.getElementById('add-custom-appliance').textContent = 'حفظ التعديلات';
+            document.getElementById('custom-appliance-name').focus();
+        }
+
+        // حذف جهاز
+        function deleteAppliance(id) {
+            if (confirm('هل أنت متأكد من حذف هذا الجهاز؟')) {
+                customAppliances = customAppliances.filter(a => a.id !== id);
+                displayAppliances([...commonAppliances, ...customAppliances]);
+            }
+        }
+
+        // إضافة/تعديل جهاز
+        function addCustomAppliance() {
+            const name = document.getElementById('custom-appliance-name').value.trim();
+            const wattage = parseFloat(document.getElementById('custom-appliance-wattage').value);
+            const surge = parseFloat(document.getElementById('custom-appliance-surge').value) || wattage;
+            const hours = parseFloat(document.getElementById('custom-appliance-hours').value);
+            const category = document.getElementById('custom-appliance-category').value;
+            
+            if (!name || isNaN(wattage)) {
+                alert("الرجاء إدخال اسم الجهاز واستهلاكه بالوات");
+                return;
+            }
+            
+            if (editingApplianceId) {
+                // تعديل الجهاز الموجود
+                const index = customAppliances.findIndex(a => a.id === editingApplianceId);
+                if (index !== -1) {
+                    customAppliances[index] = {
+                        id: editingApplianceId,
+                        name,
+                        wattage,
+                        surge,
+                        category,
+                        dailyHours: hours,
+                        icon: "🛠️"
+                    };
+                }
+                editingApplianceId = null;
+                document.getElementById('add-custom-appliance').textContent = 'إضافة الجهاز';
+            } else {
+                // إضافة جهاز جديد
+                const newAppliance = {
+                    id: Date.now(),
+                    name,
+                    wattage,
+                    surge,
+                    category,
+                    dailyHours: hours,
+                    icon: "🛠️"
+                };
+                customAppliances.push(newAppliance);
+            }
+            
+            displayAppliances([...commonAppliances, ...customAppliances]);
+            resetCustomApplianceForm();
+        }
+
+        // إعادة تعيين نموذج الجهاز المخصص
+        function resetCustomApplianceForm() {
+            document.getElementById('custom-appliance-name').value = '';
+            document.getElementById('custom-appliance-wattage').value = '';
+            document.getElementById('custom-appliance-surge').value = '';
+            document.getElementById('custom-appliance-hours').value = '1';
+            document.getElementById('custom-appliance-category').value = 'custom';
+            editingApplianceId = null;
+            document.getElementById('add-custom-appliance').textContent = 'إضافة الجهاز';
+        }
+
+        // تبديل الخيارات المتقدمة
+        function toggleAdvancedOptions() {
+            const options = document.querySelector('.advanced-options');
+            options.classList.toggle('active');
+        }
+
+        // الحصول على قيمة اللوح الشمسي
+        function getPanelSize() {
+            const select = document.getElementById('panel-size');
+            if (select.value === 'custom') {
+                return parseFloat(document.getElementById('custom-panel-size').value) || 300;
+            }
+            return parseFloat(select.value);
+        }
+
+        // الحصول على سعة الإنفرتر
+        function getInverterSize() {
+            const select = document.getElementById('inverter-size');
+            if (select.value === 'custom') {
+                return parseFloat(document.getElementById('custom-inverter-size').value) || 1000;
+            }
+            return parseFloat(select.value);
+        }
+
+        // الحصول على سعة البطارية
+        function getBatteryCapacity() {
+            const select = document.getElementById('battery-capacity');
+            if (select.value === 'custom') {
+                return parseFloat(document.getElementById('custom-battery-capacity').value) || 100;
+            }
+            return parseFloat(select.value);
+        }
+
         // تحديث حسابات الطاقة
         function updateEnergyCalculations() {
-            const panelSize = parseFloat(document.getElementById('panel-size').value);
+            const panelSize = getPanelSize();
             const panelCount = parseInt(document.getElementById('panel-count').value);
             const sunHours = parseFloat(document.getElementById('sun-hours').value);
-            const batteryCapacity = parseFloat(document.getElementById('battery-capacity').value);
+            const batteryCapacity = getBatteryCapacity();
             const batteryCount = parseInt(document.getElementById('battery-count').value);
             const batteryVoltage = parseFloat(document.getElementById('battery-voltage').value);
             const backupDays = parseFloat(document.getElementById('backup-days').value);
             
+            // الخيارات المتقدمة
+            const safetyMargin = 1 + (parseFloat(document.getElementById('safety-margin').value) || 20) / 100;
+            const systemLosses = 1 + (parseFloat(document.getElementById('system-losses').value) || 15) / 100;
+            const batteryDod = (parseFloat(document.getElementById('battery-dod').value) || 50) / 100;
+            
             const totalPanelsWattage = panelSize * panelCount;
-            const dailyProduction = totalPanelsWattage * sunHours;
+            const dailyProduction = (totalPanelsWattage * sunHours) / systemLosses;
             const totalBatteryCapacity = batteryCapacity * batteryVoltage * batteryCount;
-            const usableBatteryCapacity = totalBatteryCapacity * 0.8;
-            const dailyUsableEnergy = Math.min(dailyProduction, usableBatteryCapacity / backupDays);
+            const usableBatteryCapacity = totalBatteryCapacity * batteryDod;
+            const dailyUsableEnergy = Math.min(dailyProduction, usableBatteryCapacity / backupDays) * safetyMargin;
             const batteryAutonomy = (usableBatteryCapacity / dailyUsableEnergy).toFixed(1);
             
             document.getElementById('panel-size-display').textContent = panelSize;
@@ -847,17 +1166,18 @@
             document.getElementById('total-panels-wattage').textContent = totalPanelsWattage;
             document.getElementById('total-panels-wattage-2').textContent = totalPanelsWattage;
             document.getElementById('sun-hours-display').textContent = sunHours;
-            document.getElementById('daily-production').textContent = dailyProduction;
-            document.getElementById('daily-production-2').textContent = dailyProduction;
+            document.getElementById('daily-production').textContent = dailyProduction.toFixed(0);
+            document.getElementById('daily-production-2').textContent = dailyProduction.toFixed(0);
             document.getElementById('battery-capacity-display').textContent = batteryCapacity;
             document.getElementById('battery-voltage-display').textContent = batteryVoltage;
             document.getElementById('battery-count-display').textContent = batteryCount;
             document.getElementById('total-battery-capacity').textContent = totalBatteryCapacity;
-            document.getElementById('usable-battery-capacity').textContent = usableBatteryCapacity;
-            document.getElementById('usable-battery-capacity-2').textContent = usableBatteryCapacity;
+            document.getElementById('battery-dod-display').textContent = (batteryDod * 100);
+            document.getElementById('usable-battery-capacity').textContent = usableBatteryCapacity.toFixed(0);
+            document.getElementById('usable-battery-capacity-2').textContent = usableBatteryCapacity.toFixed(0);
             document.getElementById('backup-days-display').textContent = backupDays;
             document.getElementById('daily-usable-energy').textContent = dailyUsableEnergy.toFixed(0);
-            document.getElementById('final-daily-production').textContent = dailyProduction;
+            document.getElementById('final-daily-production').textContent = dailyProduction.toFixed(0);
             document.getElementById('final-usable-energy').textContent = dailyUsableEnergy.toFixed(0);
             document.getElementById('battery-autonomy').textContent = batteryAutonomy;
         }
@@ -865,13 +1185,13 @@
         // حساب التوافق
         function calculateCompatibility() {
             try {
-                const panelSize = parseFloat(document.getElementById('panel-size').value);
+                const panelSize = getPanelSize();
                 const panelCount = parseInt(document.getElementById('panel-count').value);
                 const totalPanelWattage = panelSize * panelCount;
                 
-                const inverterSize = parseFloat(document.getElementById('inverter-size').value);
+                const inverterSize = getInverterSize();
                 
-                const batteryCapacity = parseFloat(document.getElementById('battery-capacity').value);
+                const batteryCapacity = getBatteryCapacity();
                 const batteryCount = parseInt(document.getElementById('battery-count').value);
                 const batteryVoltage = parseFloat(document.getElementById('battery-voltage').value);
                 const totalBatteryCapacity = batteryCapacity * batteryCount * batteryVoltage;
@@ -879,9 +1199,14 @@
                 const sunHours = parseFloat(document.getElementById('sun-hours').value);
                 const backupDays = parseFloat(document.getElementById('backup-days').value);
                 
-                const dailyEnergyProduction = totalPanelWattage * sunHours;
-                const usableBatteryCapacity = totalBatteryCapacity * 0.8;
-                const dailyUsableEnergy = Math.min(dailyEnergyProduction, usableBatteryCapacity / backupDays);
+                // الخيارات المتقدمة
+                const safetyMargin = 1 + (parseFloat(document.getElementById('safety-margin').value) || 20) / 100;
+                const systemLosses = 1 + (parseFloat(document.getElementById('system-losses').value) || 15) / 100;
+                const batteryDod = (parseFloat(document.getElementById('battery-dod').value) || 50) / 100;
+                
+                const dailyEnergyProduction = (totalPanelWattage * sunHours) / systemLosses;
+                const usableBatteryCapacity = totalBatteryCapacity * batteryDod;
+                const dailyUsableEnergy = Math.min(dailyEnergyProduction, usableBatteryCapacity / backupDays) * safetyMargin;
                 
                 const selectedAppliances = [];
                 let totalRunningWattage = 0;
@@ -892,9 +1217,17 @@
                 document.querySelectorAll('.appliance-card').forEach(card => {
                     const checkbox = card.querySelector('.appliance-check');
                     if (checkbox && checkbox.checked) {
-                        const wattage = parseFloat(checkbox.dataset.wattage) || 0;
-                        const surge = parseFloat(checkbox.dataset.surge) || wattage;
-                        const name = checkbox.dataset.name || 'جهاز غير معروف';
+                        const applianceId = parseInt(checkbox.dataset.id);
+                        const appliance = [...commonAppliances, ...customAppliances].find(a => a.id === applianceId) || {
+                            name: 'جهاز غير معروف',
+                            wattage: 0,
+                            surge: 0,
+                            icon: '❓'
+                        };
+                        
+                        const wattage = parseFloat(checkbox.dataset.wattage) || appliance.wattage;
+                        const surge = parseFloat(checkbox.dataset.surge) || appliance.surge || wattage;
+                        const name = appliance.name;
                         const hours = parseFloat(card.querySelector('.appliance-hours').value) || 0;
                         const quantity = parseInt(card.querySelector('.appliance-quantity').value) || 1;
                         
@@ -911,6 +1244,7 @@
                         }
                         
                         selectedAppliances.push({
+                            id: applianceId,
                             name,
                             wattage,
                             quantity,
@@ -918,7 +1252,8 @@
                             applianceWattage,
                             applianceSurge,
                             dailyConsumption,
-                            problems
+                            problems,
+                            icon: appliance.icon
                         });
                         
                         totalRunningWattage += applianceWattage;
@@ -1018,7 +1353,7 @@
                     <span>توافق سعة البطاريات:</span>
                     <span class="compatibility-status status-${batteryCompatibility}">
                         ${getCompatibilityText(batteryCompatibility)}
-                        ${batteryCompatibility !== 'excellent' ? `(${(totalBatteryCapacity * 0.8 / totalDailyConsumption).toFixed(1)} أيام / ${backupDays} أيام مطلوبة)` : ''}
+                        ${batteryCompatibility !== 'excellent' ? `(${(totalBatteryCapacity * (parseFloat(document.getElementById('battery-dod').value) || 50) / 100) / totalDailyConsumption).toFixed(1)} أيام / ${backupDays} أيام مطلوبة)` : ''}
                     </span>
                 </div>
                 
@@ -1046,7 +1381,7 @@
                     </tr>
                     <tr>
                         <td>الطاقة المنتجة يومياً</td>
-                        <td>${dailyEnergyProduction} وات/ساعة</td>
+                        <td>${dailyEnergyProduction.toFixed(2)} وات/ساعة</td>
                         <td>${calculatePercentage(dailyEnergyProduction, totalDailyConsumption)}% من الاستهلاك اليومي</td>
                     </tr>
                     <tr>
@@ -1057,7 +1392,7 @@
                     <tr>
                         <td>سعة البطاريات</td>
                         <td>${totalBatteryCapacity} وات/ساعة</td>
-                        <td>تكفي لـ ${(totalBatteryCapacity * 0.8 / totalDailyConsumption).toFixed(1)} أيام</td>
+                        <td>تكفي لـ ${(totalBatteryCapacity * (parseFloat(document.getElementById('battery-dod').value) || 50) / 100 / totalDailyConsumption).toFixed(1)} أيام</td>
                     </tr>
                     <tr>
                         <td>الاستهلاك اليومي</td>
@@ -1069,14 +1404,17 @@
             
             let applianceTable = `
                 <table>
-                    <tr>
-                        <th>الجهاز</th>
-                        <th>العدد</th>
-                        <th>الاستهلاك (وات)</th>
-                        <th>ساعات التشغيل</th>
-                        <th>الاستهلاك اليومي</th>
-                        <th>الحالة</th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>الجهاز</th>
+                            <th>العدد</th>
+                            <th>الاستهلاك (وات)</th>
+                            <th>ساعات التشغيل</th>
+                            <th>الاستهلاك اليومي</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
             `;
             
             appliances.forEach(app => {
@@ -1085,18 +1423,21 @@
                 
                 applianceTable += `
                     <tr>
-                        <td>${app.name}</td>
+                        <td>
+                            <span style="font-size: 1.2em;">${app.icon}</span>
+                            ${app.name}
+                        </td>
                         <td>${app.quantity}</td>
                         <td>${app.applianceWattage}</td>
                         <td>${app.hours}</td>
-                        <td>${app.dailyConsumption.toFixed(2)}</td>
+                        <td>${app.dailyConsumption.toFixed(2)} وات/ساعة</td>
                         <td class="${statusClass}">${status}</td>
                     </tr>
                 `;
                 
                 if (app.problems.length > 0) {
                     applianceTable += `
-                        <tr style="background-color: #fff8f8;">
+                        <tr class="appliance-problem-row">
                             <td colspan="6" style="text-align: right; padding-right: 30px; color: var(--danger-color);">
                                 <strong>ملاحظات:</strong> ${app.problems.join('، ')}
                             </td>
@@ -1106,13 +1447,14 @@
             });
             
             applianceTable += `
-                    <tr style="font-weight: bold;">
-                        <td colspan="2">الإجمالي</td>
-                        <td>${totalWattage}</td>
+                    <tr class="total-row">
+                        <td colspan="2"><strong>الإجمالي</strong></td>
+                        <td><strong>${totalWattage} وات</strong></td>
                         <td></td>
-                        <td>${totalDailyConsumption.toFixed(2)}</td>
+                        <td><strong>${totalDailyConsumption.toFixed(2)} وات/ساعة</strong></td>
                         <td></td>
                     </tr>
+                </tbody>
                 </table>
             `;
             
@@ -1150,19 +1492,17 @@
             recs += '</ul>';
             recommendationsDiv.innerHTML = recs;
             
-            // إظهار قسم المشاركة
             document.querySelector('.share-section').style.display = 'block';
-            
             resultsDiv.style.display = 'block';
             resultsDiv.scrollIntoView({ behavior: 'smooth' });
         }
         
         // دالة مشاركة عبر واتساب
         document.getElementById('whatsapp-share').addEventListener('click', function() {
-            const panelSize = document.getElementById('panel-size').value;
+            const panelSize = getPanelSize();
             const panelCount = document.getElementById('panel-count').value;
-            const inverterSize = document.getElementById('inverter-size').value;
-            const batteryCapacity = document.getElementById('battery-capacity').value;
+            const inverterSize = getInverterSize();
+            const batteryCapacity = getBatteryCapacity();
             const batteryCount = document.getElementById('battery-count').value;
             
             let selectedAppliances = [];
@@ -1203,17 +1543,40 @@
 
         // تهيئة الصفحة عند التحميل
         window.onload = function() {
-            displayAppliances(commonAppliances);
+            displayAppliances([...commonAppliances, ...customAppliances]);
             updateEnergyCalculations();
             
             // استمع لتغييرات المدخلات
-            document.querySelectorAll('#panel-size, #panel-count, #sun-hours, #battery-capacity, #battery-count, #battery-voltage, #backup-days').forEach(input => {
+            document.querySelectorAll('#panel-size, #panel-count, #sun-hours, #battery-capacity, #battery-count, #battery-voltage, #backup-days, #safety-margin, #system-losses, #battery-dod').forEach(input => {
                 input.addEventListener('change', updateEnergyCalculations);
                 input.addEventListener('input', updateEnergyCalculations);
             });
             
             // إضافة مستمع لزر الحساب
             document.getElementById('calculate-btn').addEventListener('click', calculateCompatibility);
+            
+            // إضافة مستمعين للأزرار الجديدة
+            document.getElementById('add-custom-appliance').addEventListener('click', addCustomAppliance);
+            document.getElementById('reset-custom-appliance').addEventListener('click', resetCustomApplianceForm);
+            
+            // إظهار/إخفاء حقول الإدخال المخصصة
+            document.getElementById('panel-size').addEventListener('change', function() {
+                document.getElementById('custom-panel-size-container').style.display = 
+                    this.value === 'custom' ? 'block' : 'none';
+                updateEnergyCalculations();
+            });
+            
+            document.getElementById('inverter-size').addEventListener('change', function() {
+                document.getElementById('custom-inverter-size-container').style.display = 
+                    this.value === 'custom' ? 'block' : 'none';
+                updateEnergyCalculations();
+            });
+            
+            document.getElementById('battery-capacity').addEventListener('change', function() {
+                document.getElementById('custom-battery-capacity-container').style.display = 
+                    this.value === 'custom' ? 'block' : 'none';
+                updateEnergyCalculations();
+            });
         };
     </script>
 </body>
