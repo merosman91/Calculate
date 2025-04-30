@@ -616,7 +616,7 @@
             </div>
         </div>
         
-        <button onclick="calculateCompatibility()" class="pulse">🔋 تحليل التوافق</button>
+        <button id="calculate-btn" class="pulse">🔋 تحليل التوافق</button>
         
         <div class="card energy-calculation">
             <h2 class="card-title">🧮 تفاصيل حساب الطاقة المنتجة</h2>
@@ -714,7 +714,7 @@
     </div>
 
     <script>
-        // قاعدة بيانات موسعة للأجهزة
+        // قاعدة بيانات موسعة للأجهزة مع إضافة فريزر 12 قدم
         const commonAppliances = [
             // الإضاءة
             { id: 1, name: "لمبة LED 10 وات", wattage: 10, category: "lighting", dailyHours: 6, icon: "💡" },
@@ -733,6 +733,26 @@
             { id: 9, name: "ثلاجة 12 قدم", wattage: 150, surge: 400, category: "kitchen", dailyHours: 24, icon: "❄️" },
             { id: 10, name: "مايكروويف", wattage: 1000, surge: 1500, category: "kitchen", dailyHours: 0.5, icon: "🍲" },
             { id: 11, name: "خلاط", wattage: 500, surge: 800, category: "kitchen", dailyHours: 0.2, icon: "🥤" },
+            { id: 34, name: "فريزر 12 قدم", wattage: 180, surge: 450, category: "kitchen", dailyHours: 24, icon: "🧊" },
+            
+            // ثلاجات وديب فريزر بمقاسات مختلفة
+            { id: 21, name: "ثلاجة صغيرة 6 قدم", wattage: 100, surge: 250, category: "kitchen", dailyHours: 24, icon: "❄️" },
+            { id: 22, name: "ثلاجة 10 قدم", wattage: 130, surge: 350, category: "kitchen", dailyHours: 24, icon: "❄️" },
+            { id: 23, name: "ثلاجة 14 قدم", wattage: 170, surge: 450, category: "kitchen", dailyHours: 24, icon: "❄️" },
+            { id: 24, name: "ثلاجة 18 قدم", wattage: 200, surge: 550, category: "kitchen", dailyHours: 24, icon: "❄️" },
+            { id: 25, name: "ديب فريزر صغير", wattage: 150, surge: 400, category: "kitchen", dailyHours: 24, icon: "🧊" },
+            { id: 26, name: "ديب فريزر كبير", wattage: 250, surge: 600, category: "kitchen", dailyHours: 24, icon: "🧊" },
+            
+            // شواحن أجهزة محمولة
+            { id: 27, name: "شاحن موبايل عادي", wattage: 5, category: "electronics", dailyHours: 3, icon: "📱" },
+            { id: 28, name: "شاحن موبايل سريع", wattage: 18, category: "electronics", dailyHours: 2, icon: "⚡" },
+            { id: 29, name: "شاحن تابلت", wattage: 15, category: "electronics", dailyHours: 3, icon: "💻" },
+            { id: 30, name: "شاحن لاب توب", wattage: 60, category: "electronics", dailyHours: 4, icon: "💻" },
+            
+            // أجهزة منزلية إضافية
+            { id: 31, name: "مكواة ملابس", wattage: 1000, surge: 1200, category: "home", dailyHours: 0.5, icon: "👔" },
+            { id: 32, name: "مجفف شعر", wattage: 1200, surge: 1500, category: "home", dailyHours: 0.3, icon: "💇" },
+            { id: 33, name: "مكنسة كهربائية", wattage: 800, surge: 1000, category: "home", dailyHours: 0.5, icon: "🧹" },
             
             // الإلكترونيات
             { id: 12, name: "تلفزيون LED 32 بوصة", wattage: 50, category: "electronics", dailyHours: 5, icon: "📺" },
@@ -786,6 +806,7 @@
                         <label>
                             <input type="checkbox" class="appliance-check" 
                                    data-id="${appliance.id}"
+                                   data-name="${appliance.name}"
                                    data-wattage="${appliance.wattage}" 
                                    data-surge="${appliance.surge || appliance.wattage}">
                             اختر
@@ -843,116 +864,122 @@
 
         // حساب التوافق
         function calculateCompatibility() {
-            const panelSize = parseFloat(document.getElementById('panel-size').value);
-            const panelCount = parseInt(document.getElementById('panel-count').value);
-            const totalPanelWattage = panelSize * panelCount;
-            
-            const inverterSize = parseFloat(document.getElementById('inverter-size').value);
-            
-            const batteryCapacity = parseFloat(document.getElementById('battery-capacity').value);
-            const batteryCount = parseInt(document.getElementById('battery-count').value);
-            const batteryVoltage = parseFloat(document.getElementById('battery-voltage').value);
-            const totalBatteryCapacity = batteryCapacity * batteryCount * batteryVoltage;
-            
-            const sunHours = parseFloat(document.getElementById('sun-hours').value);
-            const backupDays = parseFloat(document.getElementById('backup-days').value);
-            
-            const dailyEnergyProduction = totalPanelWattage * sunHours;
-            const usableBatteryCapacity = totalBatteryCapacity * 0.8;
-            const dailyUsableEnergy = Math.min(dailyEnergyProduction, usableBatteryCapacity / backupDays);
-            
-            const selectedAppliances = [];
-            let totalRunningWattage = 0;
-            let totalDailyConsumption = 0;
-            let maxSurge = 0;
-            let applianceProblems = [];
-            
-            document.querySelectorAll('.appliance-card').forEach(card => {
-                const checkbox = card.querySelector('.appliance-check');
-                if (checkbox.checked) {
-                    const wattage = parseFloat(checkbox.dataset.wattage);
-                    const surge = parseFloat(checkbox.dataset.surge);
-                    const name = checkbox.dataset.name;
-                    const hours = parseFloat(card.querySelector('.appliance-hours').value);
-                    const quantity = parseInt(card.querySelector('.appliance-quantity').value);
-                    
-                    const applianceWattage = wattage * quantity;
-                    const applianceSurge = surge * quantity;
-                    const dailyConsumption = applianceWattage * hours;
-                    
-                    const problems = [];
-                    if (applianceSurge > inverterSize) {
-                        problems.push(`يتجاوز حمل البدء (${applianceSurge} وات) سعة المحول (${inverterSize} وات)`);
-                    }
-                    if (applianceWattage > inverterSize) {
-                        problems.push(`يتجاوز الاستهلاك (${applianceWattage} وات) سعة المحول (${inverterSize} وات)`);
-                    }
-                    
-                    selectedAppliances.push({
-                        name,
-                        wattage,
-                        quantity,
-                        hours,
-                        applianceWattage,
-                        applianceSurge,
-                        dailyConsumption,
-                        problems
-                    });
-                    
-                    totalRunningWattage += applianceWattage;
-                    totalDailyConsumption += dailyConsumption;
-                    if (applianceSurge > maxSurge) maxSurge = applianceSurge;
-                    if (problems.length > 0) {
-                        applianceProblems.push({
+            try {
+                const panelSize = parseFloat(document.getElementById('panel-size').value);
+                const panelCount = parseInt(document.getElementById('panel-count').value);
+                const totalPanelWattage = panelSize * panelCount;
+                
+                const inverterSize = parseFloat(document.getElementById('inverter-size').value);
+                
+                const batteryCapacity = parseFloat(document.getElementById('battery-capacity').value);
+                const batteryCount = parseInt(document.getElementById('battery-count').value);
+                const batteryVoltage = parseFloat(document.getElementById('battery-voltage').value);
+                const totalBatteryCapacity = batteryCapacity * batteryCount * batteryVoltage;
+                
+                const sunHours = parseFloat(document.getElementById('sun-hours').value);
+                const backupDays = parseFloat(document.getElementById('backup-days').value);
+                
+                const dailyEnergyProduction = totalPanelWattage * sunHours;
+                const usableBatteryCapacity = totalBatteryCapacity * 0.8;
+                const dailyUsableEnergy = Math.min(dailyEnergyProduction, usableBatteryCapacity / backupDays);
+                
+                const selectedAppliances = [];
+                let totalRunningWattage = 0;
+                let totalDailyConsumption = 0;
+                let maxSurge = 0;
+                let applianceProblems = [];
+                
+                document.querySelectorAll('.appliance-card').forEach(card => {
+                    const checkbox = card.querySelector('.appliance-check');
+                    if (checkbox && checkbox.checked) {
+                        const wattage = parseFloat(checkbox.dataset.wattage) || 0;
+                        const surge = parseFloat(checkbox.dataset.surge) || wattage;
+                        const name = checkbox.dataset.name || 'جهاز غير معروف';
+                        const hours = parseFloat(card.querySelector('.appliance-hours').value) || 0;
+                        const quantity = parseInt(card.querySelector('.appliance-quantity').value) || 1;
+                        
+                        const applianceWattage = wattage * quantity;
+                        const applianceSurge = surge * quantity;
+                        const dailyConsumption = applianceWattage * hours;
+                        
+                        const problems = [];
+                        if (applianceSurge > inverterSize) {
+                            problems.push(`يتجاوز حمل البدء (${applianceSurge} وات) سعة المحول (${inverterSize} وات)`);
+                        }
+                        if (applianceWattage > inverterSize) {
+                            problems.push(`يتجاوز الاستهلاك (${applianceWattage} وات) سعة المحول (${inverterSize} وات)`);
+                        }
+                        
+                        selectedAppliances.push({
                             name,
+                            wattage,
+                            quantity,
+                            hours,
+                            applianceWattage,
+                            applianceSurge,
+                            dailyConsumption,
                             problems
                         });
+                        
+                        totalRunningWattage += applianceWattage;
+                        totalDailyConsumption += dailyConsumption;
+                        if (applianceSurge > maxSurge) maxSurge = applianceSurge;
+                        if (problems.length > 0) {
+                            applianceProblems.push({
+                                name,
+                                problems
+                            });
+                        }
                     }
+                });
+                
+                const compatibilityIssues = [];
+                let inverterCompatibility = 'excellent';
+                if (maxSurge > inverterSize) {
+                    compatibilityIssues.push(`بعض الأجهزة تحتاج إلى محول أكبر (أقصى حمل بدء: ${maxSurge} وات)`);
+                    inverterCompatibility = 'poor';
+                } else if (totalRunningWattage > inverterSize * 0.8) {
+                    compatibilityIssues.push(`إجمالي استهلاك الأجهزة (${totalRunningWattage} وات) قريب من سعة المحول (${inverterSize} وات) - تجنب تشغيل جميع الأجهزة معًا`);
+                    inverterCompatibility = 'fair';
                 }
-            });
-            
-            const compatibilityIssues = [];
-            let inverterCompatibility = 'excellent';
-            if (maxSurge > inverterSize) {
-                compatibilityIssues.push(`بعض الأجهزة تحتاج إلى محول أكبر (أقصى حمل بدء: ${maxSurge} وات)`);
-                inverterCompatibility = 'poor';
-            } else if (totalRunningWattage > inverterSize * 0.8) {
-                compatibilityIssues.push(`إجمالي استهلاك الأجهزة (${totalRunningWattage} وات) قريب من سعة المحول (${inverterSize} وات) - تجنب تشغيل جميع الأجهزة معًا`);
-                inverterCompatibility = 'fair';
+                
+                let energyCompatibility = 'excellent';
+                if (totalDailyConsumption > dailyUsableEnergy * 1.2) {
+                    compatibilityIssues.push(`الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) أعلى بكثير من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة)`);
+                    energyCompatibility = 'poor';
+                } else if (totalDailyConsumption > dailyUsableEnergy) {
+                    compatibilityIssues.push(`الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) أعلى قليلاً من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة)`);
+                    energyCompatibility = 'fair';
+                } else if (totalDailyConsumption > dailyUsableEnergy * 0.8) {
+                    compatibilityIssues.push(`الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) قريب من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة)`);
+                    energyCompatibility = 'good';
+                }
+                
+                let batteryCompatibility = 'excellent';
+                const batteryDays = usableBatteryCapacity / totalDailyConsumption;
+                if (batteryDays < backupDays * 0.5) {
+                    compatibilityIssues.push(`سعة البطاريات تكفي لـ ${batteryDays.toFixed(1)} أيام فقط من أصل ${backupDays} أيام مطلوبة`);
+                    batteryCompatibility = 'poor';
+                } else if (batteryDays < backupDays) {
+                    compatibilityIssues.push(`سعة البطاريات تكفي لـ ${batteryDays.toFixed(1)} أيام (المطلوب ${backupDays} أيام)`);
+                    batteryCompatibility = 'fair';
+                }
+                
+                displayResults(
+                    panelSize, panelCount, totalPanelWattage,
+                    inverterSize, 
+                    batteryCapacity, batteryCount, batteryVoltage, totalBatteryCapacity,
+                    sunHours, backupDays,
+                    dailyEnergyProduction, dailyUsableEnergy,
+                    selectedAppliances, totalRunningWattage, totalDailyConsumption, maxSurge,
+                    inverterCompatibility, energyCompatibility, batteryCompatibility,
+                    compatibilityIssues, applianceProblems
+                );
+                
+            } catch (error) {
+                console.error("حدث خطأ في حساب التوافق:", error);
+                alert("حدث خطأ أثناء حساب التوافق. يرجى التأكد من إدخال جميع البيانات بشكل صحيح.");
             }
-            
-            let energyCompatibility = 'excellent';
-            if (totalDailyConsumption > dailyUsableEnergy * 1.2) {
-                compatibilityIssues.push(`الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) أعلى بكثير من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة)`);
-                energyCompatibility = 'poor';
-            } else if (totalDailyConsumption > dailyUsableEnergy) {
-                compatibilityIssues.push(`الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) أعلى قليلاً من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة)`);
-                energyCompatibility = 'fair';
-            } else if (totalDailyConsumption > dailyUsableEnergy * 0.8) {
-                compatibilityIssues.push(`الاستهلاك اليومي (${totalDailyConsumption.toFixed(2)} وات/ساعة) قريب من الطاقة المتاحة (${dailyUsableEnergy.toFixed(2)} وات/ساعة)`);
-                energyCompatibility = 'good';
-            }
-            
-            let batteryCompatibility = 'excellent';
-            const batteryDays = usableBatteryCapacity / totalDailyConsumption;
-            if (batteryDays < backupDays * 0.5) {
-                compatibilityIssues.push(`سعة البطاريات تكفي لـ ${batteryDays.toFixed(1)} أيام فقط من أصل ${backupDays} أيام مطلوبة`);
-                batteryCompatibility = 'poor';
-            } else if (batteryDays < backupDays) {
-                compatibilityIssues.push(`سعة البطاريات تكفي لـ ${batteryDays.toFixed(1)} أيام (المطلوب ${backupDays} أيام)`);
-                batteryCompatibility = 'fair';
-            }
-            
-            displayResults(
-                panelSize, panelCount, totalPanelWattage,
-                inverterSize, 
-                batteryCapacity, batteryCount, batteryVoltage, totalBatteryCapacity,
-                sunHours, backupDays,
-                dailyEnergyProduction, dailyUsableEnergy,
-                selectedAppliances, totalRunningWattage, totalDailyConsumption, maxSurge,
-                inverterCompatibility, energyCompatibility, batteryCompatibility,
-                compatibilityIssues, applianceProblems
-            );
         }
         
         // عرض النتائج
@@ -1184,6 +1211,9 @@
                 input.addEventListener('change', updateEnergyCalculations);
                 input.addEventListener('input', updateEnergyCalculations);
             });
+            
+            // إضافة مستمع لزر الحساب
+            document.getElementById('calculate-btn').addEventListener('click', calculateCompatibility);
         };
     </script>
 </body>
