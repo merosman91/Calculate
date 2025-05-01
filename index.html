@@ -656,7 +656,7 @@
                     <option value="custom">إدخال قيمة مخصصة</option>
                 </select>
                 <div id="custom-panel-size-container" style="display: none; margin-top: 10px;">
-                    <input type="number" id="custom-panel-size" min="1" placeholder="أدخل القدرة بالوات" class="form-control">
+                    <input type="number" id="custom-panel-size" min="1" placeholder="أدخل القدرة بالوات" class="form-control" value="300">
                 </div>
             </div>
             
@@ -681,7 +681,7 @@
                     <option value="custom">إدخال قيمة مخصصة</option>
                 </select>
                 <div id="custom-inverter-size-container" style="display: none; margin-top: 10px;">
-                    <input type="number" id="custom-inverter-size" min="1" placeholder="أدخل السعة بالوات" class="form-control">
+                    <input type="number" id="custom-inverter-size" min="1" placeholder="أدخل السعة بالوات" class="form-control" value="1000">
                 </div>
             </div>
             
@@ -699,7 +699,7 @@
                     <option value="custom">إدخال قيمة مخصصة</option>
                 </select>
                 <div id="custom-battery-capacity-container" style="display: none; margin-top: 10px;">
-                    <input type="number" id="custom-battery-capacity" min="1" placeholder="أدخل السعة بأمبير/ساعة" class="form-control">
+                    <input type="number" id="custom-battery-capacity" min="1" placeholder="أدخل السعة بأمبير/ساعة" class="form-control" value="100">
                 </div>
             </div>
             
@@ -945,7 +945,7 @@
             { id: 12, name: "خلاط", wattage: 300, dailyHours: 0.25, category: "kitchen", icon: "🍳" }
         ];
 
-        // تصفية الأجهزة حسب الفئة - معدلة
+        // تصفية الأجهزة حسب الفئة
         function filterAppliances(category) {
             const tabs = document.querySelectorAll('.tab-btn');
             tabs.forEach(tab => tab.classList.remove('active'));
@@ -962,7 +962,7 @@
             displayAppliances(filtered);
         }
 
-        // عرض الأجهزة - معدلة
+        // عرض الأجهزة
         function displayAppliances(appliances) {
             const container = document.getElementById('appliances-container');
             container.innerHTML = '';
@@ -1140,7 +1140,7 @@
             tbody.appendChild(totalRow);
         }
 
-        // دالة حساب التوافق - معدلة لتشمل جدول الأجهزة
+        // دالة حساب التوافق
         function calculateCompatibility() {
             try {
                 // جمع الأجهزة المختارة
@@ -1166,19 +1166,19 @@
                     return;
                 }
                 
-                // جمع مواصفات النظام الشمسي
+                // جمع مواصفات النظام الشمسي مع إصلاح مشكلة القيم المخصصة
                 const panelSize = document.getElementById('panel-size').value === 'custom' 
-                    ? parseInt(document.getElementById('custom-panel-size').value) 
+                    ? parseInt(document.getElementById('custom-panel-size').value) || 0
                     : parseInt(document.getElementById('panel-size').value);
                 
                 const panelCount = parseInt(document.getElementById('panel-count').value) || 1;
                 
                 const inverterSize = document.getElementById('inverter-size').value === 'custom' 
-                    ? parseInt(document.getElementById('custom-inverter-size').value) 
+                    ? parseInt(document.getElementById('custom-inverter-size').value) || 0
                     : parseInt(document.getElementById('inverter-size').value);
                 
                 const batteryCapacity = document.getElementById('battery-capacity').value === 'custom' 
-                    ? parseInt(document.getElementById('custom-battery-capacity').value) 
+                    ? parseInt(document.getElementById('custom-battery-capacity').value) || 0
                     : parseInt(document.getElementById('battery-capacity').value);
                 
                 const batteryCount = parseInt(document.getElementById('battery-count').value) || 1;
@@ -1280,82 +1280,84 @@
             }
         }
 
-        // مشاركة عبر واتساب - معدلة للإصلاح
+        // مشاركة عبر واتساب - الإصلاح النهائي
         function shareViaWhatsApp() {
             try {
+                // جمع البيانات الأساسية
                 const panelStatus = document.getElementById('panel-compatibility-status').textContent;
                 const inverterStatus = document.getElementById('inverter-compatibility-status').textContent;
                 const batteryStatus = document.getElementById('battery-compatibility-status').textContent;
                 
                 // جمع بيانات الأجهزة المختارة
-                let appliancesText = "الأجهزة المختارة:\n\n";
+                let appliancesText = "";
                 const rows = document.querySelectorAll('#selected-appliances-body tr');
                 
-                rows.forEach(row => {
+                rows.forEach((row, index) => {
                     const cells = row.cells;
-                    if (cells.length === 5) { // تجاهل صف المجموع
+                    if (cells.length === 5 && index < rows.length - 1) { // تجاهل صف المجموع
                         appliancesText += `- ${cells[0].textContent} (${cells[1].textContent}×${cells[2].textContent} وات × ${cells[3].textContent} ساعة)\n`;
                     }
                 });
                 
+                // الحصول على إجمالي الاستهلاك
                 const totalRow = rows[rows.length - 1];
-                const totalConsumption = totalRow.cells[4].textContent;
+                const totalConsumption = totalRow?.cells[4]?.textContent || "غير متوفر";
                 
-                const message = `*نتائج حساب الطاقة الشمسية*\n\n${appliancesText}\n*إجمالي الاستهلاك اليومي:* ${totalConsumption} واط/ساعة\n\n*ملخص التوافق*\n- الألواح الشمسية: ${panelStatus}\n- المحول (الإنفرتر): ${inverterStatus}\n- البطاريات: ${batteryStatus}\n\nتم إنشاء هذه النتائج بواسطة *حاسبة الطاقة الشمسية المتكاملة*\nتصميم: ميرغني أبوالقاسم عثمان\nmerghanigasimosman@gmail.com`;
+                // إنشاء رسالة واتساب
+                const message = `*نتائج حساب الطاقة الشمسية*\n\n` +
+                                `*الأجهزة المختارة:*\n${appliancesText}\n` +
+                                `*إجمالي الاستهلاك اليومي:* ${totalConsumption} واط/ساعة\n\n` +
+                                `*ملخص التوافق*\n` +
+                                `- الألواح الشمسية: ${panelStatus}\n` +
+                                `- المحول (الإنفرتر): ${inverterStatus}\n` +
+                                `- البطاريات: ${batteryStatus}\n\n` +
+                                `تم إنشاء هذه النتائج بواسطة *حاسبة الطاقة الشمسية المتكاملة*\n` +
+                                `تصميم: ميرغني أبوالقاسم عثمان\n` +
+                                `merghanigasimosman@gmail.com`;
                 
+                // تشفير الرسالة وإرسالها
                 const encodedMessage = encodeURIComponent(message);
-                window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+                const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+                
+                // فتح نافذة جديدة لمشاركة واتساب
+                window.open(whatsappUrl, '_blank');
+                
             } catch (error) {
                 console.error("حدث خطأ في المشاركة:", error);
                 alert("حدث خطأ أثناء محاولة المشاركة. يرجى المحاولة مرة أخرى.");
             }
         }
 
-        // تهيئة الصفحة عند التحميل - معدلة للإصلاح
+        // تهيئة الصفحة عند التحميل مع الإصلاحات النهائية
         window.onload = function() {
             // عرض جميع الأجهزة أولاً
             filterAppliances('all');
             
             // إعداد مستمعين للأحداث لإدخال القيم المخصصة
-            document.getElementById('panel-size').addEventListener('change', function() {
-                const container = document.getElementById('custom-panel-size-container');
-                container.style.display = this.value === 'custom' ? 'block' : 'none';
-                if (this.value === 'custom') {
-                    document.getElementById('custom-panel-size').focus();
-                }
-            });
+            const setupCustomInput = (selectId, inputId, containerId) => {
+                const select = document.getElementById(selectId);
+                const input = document.getElementById(inputId);
+                const container = document.getElementById(containerId);
+                
+                select.addEventListener('change', function() {
+                    if (this.value === 'custom') {
+                        container.style.display = 'block';
+                        input.focus();
+                    } else {
+                        container.style.display = 'none';
+                    }
+                });
+                
+                input.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.focus();
+                });
+            };
             
-            document.getElementById('inverter-size').addEventListener('change', function() {
-                const container = document.getElementById('custom-inverter-size-container');
-                container.style.display = this.value === 'custom' ? 'block' : 'none';
-                if (this.value === 'custom') {
-                    document.getElementById('custom-inverter-size').focus();
-                }
-            });
-            
-            document.getElementById('battery-capacity').addEventListener('change', function() {
-                const container = document.getElementById('custom-battery-capacity-container');
-                container.style.display = this.value === 'custom' ? 'block' : 'none';
-                if (this.value === 'custom') {
-                    document.getElementById('custom-battery-capacity').focus();
-                }
-            });
-
-            // تمكين إدخال القيم المخصصة عند النقر
-            document.getElementById('custom-panel-size')?.addEventListener('click', function(e) {
-                e.stopPropagation();
-                this.focus();
-            });
-            
-            document.getElementById('custom-inverter-size')?.addEventListener('click', function(e) {
-                e.stopPropagation();
-                this.focus();
-            });
-            
-            document.getElementById('custom-battery-capacity')?.addEventListener('click', function(e) {
-                e.stopPropagation();
-                this.focus();
-            });
+            // إعداد حقول الإدخال المخصصة
+            setupCustomInput('panel-size', 'custom-panel-size', 'custom-panel-size-container');
+            setupCustomInput('inverter-size', 'custom-inverter-size', 'custom-inverter-size-container');
+            setupCustomInput('battery-capacity', 'custom-battery-capacity', 'custom-battery-capacity-container');
         };
     </script>
 </body>
